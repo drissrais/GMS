@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "accessory")
-public class Accessory {
+public class AccessoryEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class Accessory {
 	@ManyToOne
 	@JoinColumn(name = "vehicle_id", nullable = false)
 	@JsonIgnore
-	private Vehicle vehicle;
+	private VehicleEntity vehicle;
 
 	public Long getId() {
 		return id;
@@ -76,11 +76,11 @@ public class Accessory {
 		this.type = type;
 	}
 	
-	public Vehicle getVehicle() {
+	public VehicleEntity getVehicle() {
 		return vehicle;
 	}
 	
-	public void setVehicle(Vehicle vehicle) {
+	public void setVehicle(VehicleEntity vehicle) {
 		this.vehicle = vehicle;
 	}
 

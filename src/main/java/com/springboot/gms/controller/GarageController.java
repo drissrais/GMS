@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.gms.entities.Garage;
+import com.springboot.gms.entities.GarageEntity;
 import com.springboot.gms.service.GarageService;
 
 @RestController
-@RequestMapping("/api/garage")
+@RequestMapping("/api/garages")
 public class GarageController {
 
 	private GarageService garageService;
@@ -29,36 +29,37 @@ public class GarageController {
 		this.garageService = garageService;
 	}
 
-	@PostMapping("/add")
-	public ResponseEntity<Garage> saveGarage(@RequestBody Garage garage) {
-		return new ResponseEntity<Garage>(garageService.saveGarage(garage), HttpStatus.CREATED);
+	@PostMapping("/saveGarage")
+	public ResponseEntity<GarageEntity> saveGarage(@RequestBody GarageEntity garage) {
+		return new ResponseEntity<GarageEntity>(garageService.saveGarage(garage), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/get")
-	public List<Garage> getAllGarages() {
+	@GetMapping("/getAllGarages")
+	public List<GarageEntity> getAllGarages() {
 		return garageService.getAllGarages();
 	}
 
-	@GetMapping("/get/{id}")
-	public ResponseEntity<Garage> getGarageById(@PathVariable("id") long garageId) {
-		return new ResponseEntity<Garage>(garageService.getGarageById(garageId), HttpStatus.OK);
+	@GetMapping("/getGarageById/{id}")
+	public ResponseEntity<GarageEntity> getGarageById(@PathVariable("id") long garageId) {
+		return new ResponseEntity<GarageEntity>(garageService.getGarageById(garageId), HttpStatus.OK);
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Garage> updateGarage(@RequestBody Garage garage, @PathVariable Long id) {
-		return new ResponseEntity<Garage>(garageService.updateGarage(garage, id), HttpStatus.OK);
+	@PutMapping("/updateGarage/{id}")
+	public ResponseEntity<GarageEntity> updateGarage(@RequestBody GarageEntity garage, @PathVariable Long id) {
+		return new ResponseEntity<GarageEntity>(garageService.updateGarage(garage, id), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteGarage/{id}")
 	public ResponseEntity<String> deleteGarage(@PathVariable Long id) {
 		garageService.deleteGarage(id);
-		return new ResponseEntity<String>("Garage deleted successfully!", HttpStatus.OK);
+		return new ResponseEntity<String>("Garage deleted successfully!", HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/getGarageListByCriteria")
-	public Page<Garage> getGarageListByCriteria(@RequestParam(required = false) String name,
+	public ResponseEntity<Page<GarageEntity>> getGarageListByCriteria(@RequestParam(required = false) String name,
 			@RequestParam(required = false) String city, @RequestParam int pageIndex, @RequestParam int sizeOfPage) {
-		return garageService.getGarageListByCriteria(name, city, pageIndex, sizeOfPage);
+		return new ResponseEntity<Page<GarageEntity>>(
+				garageService.getGarageListByCriteria(name, city, pageIndex, sizeOfPage), HttpStatus.OK);
 	}
 
 }

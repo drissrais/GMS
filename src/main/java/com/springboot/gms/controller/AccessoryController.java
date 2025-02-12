@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.gms.entities.Accessory;
+import com.springboot.gms.entities.AccessoryEntity;
 import com.springboot.gms.service.AccessoryService;
 
 @RestController
-@RequestMapping("/api/accessory")
+@RequestMapping("/api/accessories")
 public class AccessoryController {
 
 	private AccessoryService accessoryService;
@@ -27,27 +27,27 @@ public class AccessoryController {
 		this.accessoryService = accessoryService;
 	}
 
-	@PostMapping("/add/{vehicleId}")
-	public ResponseEntity<Accessory> addAccessoryToVehicle(@RequestBody Accessory accessory,
+	@PostMapping("/addAccessoryToVehicle/{vehicleId}")
+	public ResponseEntity<AccessoryEntity> addAccessoryToVehicle(@RequestBody AccessoryEntity accessory,
 			@PathVariable Long vehicleId) {
-		Accessory savedAccessory = accessoryService.addAccessoryToVehicle(accessory, vehicleId);
-		return new ResponseEntity<Accessory>(savedAccessory, HttpStatus.CREATED);
+		AccessoryEntity savedAccessory = accessoryService.addAccessoryToVehicle(accessory, vehicleId);
+		return new ResponseEntity<AccessoryEntity>(savedAccessory, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Accessory> updateAccessory(@RequestBody Accessory accessory, @PathVariable Long id) {
-		Accessory updatedAccessory = accessoryService.updateAccessory(accessory, id);
-		return new ResponseEntity<Accessory>(updatedAccessory, HttpStatus.OK);
+	@PutMapping("/updateAccessory/{id}")
+	public ResponseEntity<AccessoryEntity> updateAccessory(@RequestBody AccessoryEntity accessory, @PathVariable Long id) {
+		AccessoryEntity updatedAccessory = accessoryService.updateAccessory(accessory, id);
+		return new ResponseEntity<AccessoryEntity>(updatedAccessory, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteAccessory/{id}")
 	public ResponseEntity<String> deleteAccessory(@PathVariable Long id) {
 		accessoryService.deleteAccessory(id);
-		return new ResponseEntity<String>("Accessory deleted successfully.", HttpStatus.OK);
+		return new ResponseEntity<String>("Accessory deleted successfully.", HttpStatus.NO_CONTENT);
 	}
 
 	@GetMapping("/getAccessoriesByVehicle/{vehicleId}")
-	public Page<Accessory> getAccessoriesByVehicle(@PathVariable Long vehicleId, @RequestParam int pageIndex,
+	public Page<AccessoryEntity> getAccessoriesByVehicle(@PathVariable Long vehicleId, @RequestParam int pageIndex,
 			@RequestParam int sizeOfPage) {
 		return accessoryService.getAccessoriesByVehicle(vehicleId, pageIndex, sizeOfPage);
 	}

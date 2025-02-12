@@ -1,13 +1,15 @@
 package com.springboot.gms.service.impl;
 
+import java.util.Objects;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.springboot.gms.entities.Garage;
-import com.springboot.gms.entities.Vehicle;
+import com.springboot.gms.entities.GarageEntity;
+import com.springboot.gms.entities.VehicleEntity;
 import com.springboot.gms.exception.ResourceNotFoundException;
 import com.springboot.gms.repository.GarageRepository;
 import com.springboot.gms.repository.VehicleRepository;
@@ -26,8 +28,8 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public Vehicle addVehicleToGarage(Long garageId, Vehicle vehicle) {
-		Garage garage = garageRepository.findById(garageId)
+	public VehicleEntity addVehicleToGarage(Long garageId, VehicleEntity vehicle) {
+		GarageEntity garage = garageRepository.findById(garageId)
 				.orElseThrow(() -> new ResourceNotFoundException("Garage", "ID", garageId));
 
 		// Validate that Garage contains less than 50 vehicles
@@ -40,7 +42,7 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public Page<Vehicle> getVehiclesByGarage(Long garageId, int pageIndex, int sizeOfPage) {
+	public Page<VehicleEntity> getVehiclesByGarage(Long garageId, int pageIndex, int sizeOfPage) {
 		Pageable sortedByBrandAsc = PageRequest.of(pageIndex, sizeOfPage, Sort.by("brand").ascending());
 		// Check if Garage exists in DB or not
 		garageRepository.findById(garageId).orElseThrow(() -> new ResourceNotFoundException("Garage", "Id", garageId));
@@ -48,21 +50,21 @@ public class VehicleServiceImpl implements VehicleService {
 	}
 
 	@Override
-	public Page<Vehicle> getVehiclesByBrand(String brand, int pageIndex, int sizeOfPage) {
+	public Page<VehicleEntity> getVehiclesByBrand(String brand, int pageIndex, int sizeOfPage) {
 		Pageable sortedByBrandAsc = PageRequest.of(pageIndex, sizeOfPage, Sort.by("brand").ascending());
 		return vehicleRepository.findByBrand(brand, sortedByBrandAsc);
 	}
 
 	@Override
-	public Vehicle updateVehicle(Vehicle vehicle, Long id) {
-		Vehicle existingVehicle = vehicleRepository.findById(id)
+	public VehicleEntity updateVehicle(VehicleEntity vehicle, Long id) {
+		VehicleEntity existingVehicle = vehicleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Vehicle", "ID", id));
 		existingVehicle.setBrand(vehicle.getBrand());
 		existingVehicle.setManufacturingYear(vehicle.getManufacturingYear());
 		existingVehicle.setFuelType(vehicle.getFuelType());
 
-		if (vehicle.getGarage() != null && vehicle.getGarage().getId() != null) {
-			Garage existingGarage = garageRepository.findById(vehicle.getGarage().getId())
+		if (Objects.nonNull(vehicle.getGarage()) && Objects.nonNull(vehicle.getGarage().getId())) {
+			GarageEntity existingGarage = garageRepository.findById(vehicle.getGarage().getId())
 					.orElseThrow(() -> new ResourceNotFoundException("Garage", "ID", vehicle.getGarage().getId()));
 			existingVehicle.setGarage(existingGarage);
 		}

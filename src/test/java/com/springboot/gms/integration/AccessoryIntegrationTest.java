@@ -15,9 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.springboot.gms.entities.Accessory;
-import com.springboot.gms.entities.Garage;
-import com.springboot.gms.entities.Vehicle;
+import com.springboot.gms.entities.AccessoryEntity;
+import com.springboot.gms.entities.GarageEntity;
+import com.springboot.gms.entities.VehicleEntity;
 import com.springboot.gms.repository.AccessoryRepository;
 import com.springboot.gms.repository.GarageRepository;
 import com.springboot.gms.repository.VehicleRepository;
@@ -44,11 +44,11 @@ public class AccessoryIntegrationTest {
 	@Test
 	void addAccessoryToVehicle_ShouldReturnCreatedAccessory() throws Exception {
 		// Arrange
-		Garage garage = new Garage();
+		GarageEntity garage = new GarageEntity();
 		garage.setName("Garage AutoTech");
 		garage = garageRepository.save(garage);
 		
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setBrand("Talisman");
 		vehicle.setGarage(garage);
 		vehicleRepository.save(vehicle);
@@ -93,16 +93,16 @@ public class AccessoryIntegrationTest {
 	@Test
 	void updateAccessory_ShouldReturnUpdatedAccessory() throws Exception {
 		// Arrange
-		Garage garage = new Garage();
+		GarageEntity garage = new GarageEntity();
 		garage.setName("Garage AutoTech");
 		garage = garageRepository.save(garage);
 		
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setBrand("Talisman");
 		vehicle.setGarage(garage);
 		vehicle = vehicleRepository.save(vehicle);
 		
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setName("Sunroof Cover");
 		accessory.setDescription("Protects sunroof from dust");
 		accessory.setPrice(50.0);
@@ -151,16 +151,16 @@ public class AccessoryIntegrationTest {
 	@Test
 	void deleteAccessory_ShouldDelete() throws Exception {
 		// Arrange
-		Garage garage = new Garage();
+		GarageEntity garage = new GarageEntity();
 		garage.setName("Garage AutoTech");
 		garage = garageRepository.save(garage);
 		
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setBrand("Talisman");
 		vehicle.setGarage(garage);
 		vehicle = vehicleRepository.save(vehicle);
 		
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setName("Sunroof Cover");
 		accessory.setDescription("Protects sunroof from dust");
 		accessory.setPrice(50.0);
@@ -187,16 +187,16 @@ public class AccessoryIntegrationTest {
 	@Test
 	void getAccessoriesByVehicle_ShouldReturnPageOfAccessories() throws Exception {
 		// Arrange
-		Garage garage = new Garage();
+		GarageEntity garage = new GarageEntity();
 		garage.setName("Garage AutoTech");
 		garage = garageRepository.save(garage);
 		
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setBrand("Talisman");
 		vehicle.setGarage(garage);
 		vehicle = vehicleRepository.save(vehicle);
 		
-		Accessory accessory1 = new Accessory();
+		AccessoryEntity accessory1 = new AccessoryEntity();
 		accessory1.setName("Sunroof Cover");
 		accessory1.setDescription("Protects sunroof from dust");
 		accessory1.setPrice(50.0);

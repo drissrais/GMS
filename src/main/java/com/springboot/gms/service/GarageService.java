@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import com.springboot.gms.entities.Garage;
+import com.springboot.gms.entities.GarageEntity;
 
 public interface GarageService {
 	
-	Garage saveGarage(Garage garage);
-	List<Garage> getAllGarages();
-	Garage getGarageById(Long id);
-	Garage updateGarage(Garage garage, Long id);
+	GarageEntity saveGarage(GarageEntity garage);
+	List<GarageEntity> getAllGarages();
+	GarageEntity getGarageById(Long id);
+	GarageEntity updateGarage(GarageEntity garage, Long id);
 	void deleteGarage(Long id);
-	Page<Garage> getGarageListByCriteria(String name, String city, int pageIndex, int sizeOfPage);
+	Page<GarageEntity> getGarageListByCriteria(String name, String city, int pageIndex, int sizeOfPage);
 
 }

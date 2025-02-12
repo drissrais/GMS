@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "daily_opening_time")
-public class DailyOpeningTime {
+public class DailyOpeningTimeEntity {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +31,12 @@ public class DailyOpeningTime {
     private DayOfWeek dayOfWeek;
 
     @OneToMany(mappedBy = "dailyOpeningTime", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OpeningTime> openingTimes;
+    private List<OpeningTimeEntity> openingTimes;
     
     @ManyToOne
     @JoinColumn(name = "garage_id")
     @JsonIgnore
-    private Garage garage;
+    private GarageEntity garage;
 
 	public Long getId() {
 		return id;
@@ -54,19 +54,19 @@ public class DailyOpeningTime {
 		this.dayOfWeek = dayOfWeek;
 	}
 
-	public List<OpeningTime> getOpeningTimes() {
+	public List<OpeningTimeEntity> getOpeningTimes() {
 		return openingTimes;
 	}
 
-	public void setOpeningTimes(List<OpeningTime> openingTimes) {
+	public void setOpeningTimes(List<OpeningTimeEntity> openingTimes) {
 		this.openingTimes = openingTimes;
 	}
 	
-	public Garage getGarage() {
+	public GarageEntity getGarage() {
 		return garage;
 	}
 	
-	public void setGarage(Garage garage) {
+	public void setGarage(GarageEntity garage) {
 		this.garage = garage;
 	}
 

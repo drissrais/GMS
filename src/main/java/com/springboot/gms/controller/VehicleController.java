@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot.gms.entities.Vehicle;
+import com.springboot.gms.entities.VehicleEntity;
 import com.springboot.gms.service.VehicleService;
 
 @RestController
-@RequestMapping("/api/vehicle")
+@RequestMapping("/api/vehicles")
 public class VehicleController {
 
 	private VehicleService vehicleService;
@@ -27,34 +27,34 @@ public class VehicleController {
 		this.vehicleService = vehicleService;
 	}
 
-	@PostMapping("/add/{garageId}")
-	public ResponseEntity<Vehicle> addVehicleToGarage(@PathVariable Long garageId, @RequestBody Vehicle vehicle) {
-		Vehicle savedVehicle = vehicleService.addVehicleToGarage(garageId, vehicle);
-		return new ResponseEntity<Vehicle>(savedVehicle, HttpStatus.CREATED);
+	@PostMapping("/addVehicleToGarage/{garageId}")
+	public ResponseEntity<VehicleEntity> addVehicleToGarage(@PathVariable Long garageId, @RequestBody VehicleEntity vehicle) {
+		VehicleEntity savedVehicle = vehicleService.addVehicleToGarage(garageId, vehicle);
+		return new ResponseEntity<VehicleEntity>(savedVehicle, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/getVehiclesByGarage/{garageId}")
-	public Page<Vehicle> getVehiclesByGarage(@PathVariable Long garageId, @RequestParam int pageIndex,
+	public Page<VehicleEntity> getVehiclesByGarage(@PathVariable Long garageId, @RequestParam int pageIndex,
 			@RequestParam int sizeOfPage) {
 		return vehicleService.getVehiclesByGarage(garageId, pageIndex, sizeOfPage);
 	}
 
 	@GetMapping("/getVehiclesByBrand")
-	public Page<Vehicle> getVehiclesByBrand(@RequestParam String brand, @RequestParam int pageIndex,
+	public Page<VehicleEntity> getVehiclesByBrand(@RequestParam String brand, @RequestParam int pageIndex,
 			@RequestParam int sizeOfPage) {
 		return vehicleService.getVehiclesByBrand(brand, pageIndex, sizeOfPage);
 	}
 	
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Vehicle> updateVehicle(@RequestBody Vehicle vehicle, @PathVariable Long id) {
-		Vehicle updatedVehicle = vehicleService.updateVehicle(vehicle, id);
-		return new ResponseEntity<Vehicle>(updatedVehicle, HttpStatus.OK);
+	@PutMapping("/updateVehicle/{id}")
+	public ResponseEntity<VehicleEntity> updateVehicle(@RequestBody VehicleEntity vehicle, @PathVariable Long id) {
+		VehicleEntity updatedVehicle = vehicleService.updateVehicle(vehicle, id);
+		return new ResponseEntity<VehicleEntity>(updatedVehicle, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/deleteVehicle/{id}")
 	public ResponseEntity<String> deleteVehicle(@PathVariable Long id) {
 		vehicleService.deleteVehicle(id);
-		return new ResponseEntity<String>("Vehicle deleted successfully.", HttpStatus.OK);
+		return new ResponseEntity<String>("Vehicle deleted successfully.", HttpStatus.NO_CONTENT);
 	}
 
 }

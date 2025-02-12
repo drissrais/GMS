@@ -2,13 +2,13 @@ package com.springboot.gms.service;
 
 import org.springframework.data.domain.Page;
 
-import com.springboot.gms.entities.Accessory;
+import com.springboot.gms.entities.AccessoryEntity;
 
 public interface AccessoryService {
 	
-	Accessory addAccessoryToVehicle(Accessory accessory, Long vehicleId);
-	Accessory updateAccessory(Accessory accessory, Long id);
+	AccessoryEntity addAccessoryToVehicle(AccessoryEntity accessory, Long vehicleId);
+	AccessoryEntity updateAccessory(AccessoryEntity accessory, Long id);
 	void deleteAccessory(Long id);
-	Page<Accessory> getAccessoriesByVehicle(Long vehicleId, int pageIndex, int sizeOfPage);
+	Page<AccessoryEntity> getAccessoriesByVehicle(Long vehicleId, int pageIndex, int sizeOfPage);
 
 }

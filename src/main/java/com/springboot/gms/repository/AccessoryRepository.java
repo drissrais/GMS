@@ -4,10 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.springboot.gms.entities.Accessory;
+import com.springboot.gms.entities.AccessoryEntity;
 
-public interface AccessoryRepository extends JpaRepository<Accessory, Long> {
+public interface AccessoryRepository extends JpaRepository<AccessoryEntity, Long> {
 
-	Page<Accessory> findByVehicleId(Long vehicleId, Pageable pageable);
+	Page<AccessoryEntity> findByVehicleId(Long vehicleId, Pageable pageable);
 	
 }

@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "vehicle")
-public class Vehicle {
+public class VehicleEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +35,10 @@ public class Vehicle {
 	@ManyToOne
 	@JoinColumn(name = "garage_id", nullable = false)
 	@JsonIgnore
-	private Garage garage;
+	private GarageEntity garage;
 	
 	@OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Accessory> accessories;
+	private List<AccessoryEntity> accessories;
 
 	public Long getId() {
 		return id;
@@ -72,19 +72,19 @@ public class Vehicle {
 		this.fuelType = fuelType;
 	}
 
-	public Garage getGarage() {
+	public GarageEntity getGarage() {
 		return garage;
 	}
 
-	public void setGarage(Garage garage) {
+	public void setGarage(GarageEntity garage) {
 		this.garage = garage;
 	}
 	
-	public List<Accessory> getAccessories() {
+	public List<AccessoryEntity> getAccessories() {
 		return accessories;
 	}
 	
-	public void setAccessories(List<Accessory> accessories) {
+	public void setAccessories(List<AccessoryEntity> accessories) {
 		this.accessories = accessories;
 	}
 

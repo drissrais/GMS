@@ -24,8 +24,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.springboot.gms.entities.Accessory;
-import com.springboot.gms.entities.Vehicle;
+import com.springboot.gms.entities.AccessoryEntity;
+import com.springboot.gms.entities.VehicleEntity;
 import com.springboot.gms.exception.ResourceNotFoundException;
 import com.springboot.gms.repository.AccessoryRepository;
 import com.springboot.gms.repository.VehicleRepository;
@@ -47,19 +47,19 @@ public class AccessoryServiceImplTest {
 	void addAccessoryToVehicle_ShouldReturnAccessory() {
 		// Arrange
 		Long vehicleId = 1L;
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setId(vehicleId);
 
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(1L);
 		accessory.setName("GPS Tracker");
 		accessory.setVehicle(vehicle);
 
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.of(vehicle));
-		Mockito.when(accessoryRepository.save(Mockito.any(Accessory.class))).thenReturn(accessory);
+		Mockito.when(accessoryRepository.save(Mockito.any(AccessoryEntity.class))).thenReturn(accessory);
 
 		// Act
-		Accessory result = accessoryService.addAccessoryToVehicle(accessory, vehicleId);
+		AccessoryEntity result = accessoryService.addAccessoryToVehicle(accessory, vehicleId);
 
 		// Assert
 		assertNotNull(result);
@@ -68,7 +68,7 @@ public class AccessoryServiceImplTest {
 
 		// Verify method calls
 		verify(vehicleRepository, times(1)).findById(vehicleId);
-		verify(accessoryRepository, times(1)).save(Mockito.any(Accessory.class));
+		verify(accessoryRepository, times(1)).save(Mockito.any(AccessoryEntity.class));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class AccessoryServiceImplTest {
 		Long vehicleId = 99L;
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.empty());
 
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(1L);
 		accessory.setName("GPS Tracker");
 
@@ -88,17 +88,17 @@ public class AccessoryServiceImplTest {
 
 		// Verify method calls
 		verify(vehicleRepository, times(1)).findById(vehicleId);
-		verify(accessoryRepository, never()).save(any(Accessory.class));
+		verify(accessoryRepository, never()).save(any(AccessoryEntity.class));
 	}
 
 	@Test
 	void updateAccessory_ShouldReturnAccessory() {
 		// Arrange
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setId(1L);
 
 		Long accessoryId = 1L;
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(accessoryId);
 		accessory.setName("Car Cover");
 		accessory.setDescription("Waterproof and dustproof car cover for sedans.");
@@ -109,10 +109,10 @@ public class AccessoryServiceImplTest {
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.of(accessory));
 		Mockito.when(vehicleRepository.findById(Mockito.eq(accessory.getVehicle().getId())))
 				.thenReturn(Optional.of(vehicle));
-		Mockito.when(accessoryRepository.save(Mockito.any(Accessory.class))).thenReturn(accessory);
+		Mockito.when(accessoryRepository.save(Mockito.any(AccessoryEntity.class))).thenReturn(accessory);
 
 		// Act
-		Accessory result = accessoryService.updateAccessory(accessory, accessoryId);
+		AccessoryEntity result = accessoryService.updateAccessory(accessory, accessoryId);
 
 		// Assert
 		assertNotNull(result);
@@ -122,18 +122,18 @@ public class AccessoryServiceImplTest {
 		// Verify method calls
 		verify(accessoryRepository, times(1)).findById(accessoryId);
 		verify(vehicleRepository, times(1)).findById(accessory.getVehicle().getId());
-		verify(accessoryRepository, times(1)).save(Mockito.any(Accessory.class));
+		verify(accessoryRepository, times(1)).save(Mockito.any(AccessoryEntity.class));
 	}
 
 	@Test
 	void updateAccessory_ShouldThrowException_WhenAccessoryNotFound() {
 		// Arrange
 		Long accessoryId = 99L;
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(accessoryId);
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.empty());
 
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setId(1L);
 
 		// Act & Assert
@@ -144,14 +144,14 @@ public class AccessoryServiceImplTest {
 		// Verify method calls
 		verify(accessoryRepository, times(1)).findById(accessoryId);
 		verify(vehicleRepository, never()).findById(vehicle.getId());
-		verify(accessoryRepository, never()).save(any(Accessory.class));
+		verify(accessoryRepository, never()).save(any(AccessoryEntity.class));
 	}
 
 	@Test
 	void deleteAccessory_ShouldDelete_WhenAccessoryExists() {
 		// Arrange
 		Long accessoryId = 1L;
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(accessoryId);
 
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.of(accessory));
@@ -184,20 +184,20 @@ public class AccessoryServiceImplTest {
 	void getAccessoriesByVehicle_ShouldReturnPageOfAccessories() {
 		// Arrange
 		Long vehicleId = 1L;
-		Vehicle vehicle = new Vehicle();
+		VehicleEntity vehicle = new VehicleEntity();
 		vehicle.setId(vehicleId);
 
-		Accessory accessory1 = new Accessory();
+		AccessoryEntity accessory1 = new AccessoryEntity();
 		accessory1.setId(1L);
 		accessory1.setName("GPS Tracker");
 		accessory1.setVehicle(vehicle);
 
-		Accessory accessory2 = new Accessory();
+		AccessoryEntity accessory2 = new AccessoryEntity();
 		accessory2.setId(2L);
 		accessory2.setName("Car Cover");
 		accessory2.setVehicle(vehicle);
 
-		Page<Accessory> accessoryPage = new PageImpl<>(List.of(accessory1, accessory2));
+		Page<AccessoryEntity> accessoryPage = new PageImpl<>(List.of(accessory1, accessory2));
 		Pageable sortedByNameAsc = PageRequest.of(0, 5, Sort.by("name").ascending());
 
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.of(vehicle));
@@ -205,7 +205,7 @@ public class AccessoryServiceImplTest {
 				.thenReturn(accessoryPage);
 
 		// Act
-		Page<Accessory> result = accessoryService.getAccessoriesByVehicle(vehicleId, 0, 5);
+		Page<AccessoryEntity> result = accessoryService.getAccessoriesByVehicle(vehicleId, 0, 5);
 
 		// Assert
 		assertNotNull(result);

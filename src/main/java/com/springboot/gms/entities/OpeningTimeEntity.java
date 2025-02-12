@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "opening_time")
-public class OpeningTime {
+public class OpeningTimeEntity {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class OpeningTime {
 	@ManyToOne
 	@JoinColumn(name = "daily_opening_time_id")
 	@JsonIgnore
-	private DailyOpeningTime dailyOpeningTime;
+	private DailyOpeningTimeEntity dailyOpeningTime;
 	
 	public Long getId() {
 		return id;
@@ -50,10 +50,10 @@ public class OpeningTime {
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
 	}
-	public DailyOpeningTime getDailyOpeningTime() {
+	public DailyOpeningTimeEntity getDailyOpeningTime() {
 		return dailyOpeningTime;
 	}
-	public void setDailyOpeningTime(DailyOpeningTime dailyOpeningTime) {
+	public void setDailyOpeningTime(DailyOpeningTimeEntity dailyOpeningTime) {
 		this.dailyOpeningTime = dailyOpeningTime;
 	}
 

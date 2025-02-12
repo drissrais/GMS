@@ -21,7 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springboot.gms.entities.Accessory;
+import com.springboot.gms.entities.AccessoryEntity;
 import com.springboot.gms.service.AccessoryService;
 import com.springboot.gms.service.GarageService;
 import com.springboot.gms.service.VehicleService;
@@ -49,11 +49,11 @@ public class AccessoryControllerTest {
 		// Arrange
 		Long vehicleId = 1L;
 
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(1L);
 		accessory.setName("GPS Tracker");
 
-		Mockito.when(accessoryService.addAccessoryToVehicle(Mockito.any(Accessory.class), Mockito.eq(vehicleId)))
+		Mockito.when(accessoryService.addAccessoryToVehicle(Mockito.any(AccessoryEntity.class), Mockito.eq(vehicleId)))
 				.thenReturn(accessory);
 
 		// Act & Assert
@@ -67,11 +67,11 @@ public class AccessoryControllerTest {
 		// Arrange
 		Long accessoryId = 1L;
 
-		Accessory accessory = new Accessory();
+		AccessoryEntity accessory = new AccessoryEntity();
 		accessory.setId(accessoryId);
 		accessory.setName("GPS Tracker");
 
-		Mockito.when(accessoryService.updateAccessory(Mockito.any(Accessory.class), Mockito.eq(accessoryId)))
+		Mockito.when(accessoryService.updateAccessory(Mockito.any(AccessoryEntity.class), Mockito.eq(accessoryId)))
 				.thenReturn(accessory);
 
 		// Act & Assert
@@ -98,11 +98,11 @@ public class AccessoryControllerTest {
 		// Arrange
 		Long vehicleId = 1L;
 
-		Accessory accessory1 = new Accessory();
+		AccessoryEntity accessory1 = new AccessoryEntity();
 		accessory1.setId(1L);
 		accessory1.setName("GPS Tracker");
 
-		Page<Accessory> accessoryPage = new PageImpl<>(List.of(accessory1));
+		Page<AccessoryEntity> accessoryPage = new PageImpl<>(List.of(accessory1));
 
 		Mockito.when(
 				accessoryService.getAccessoriesByVehicle(Mockito.eq(vehicleId), Mockito.anyInt(), Mockito.anyInt()))
