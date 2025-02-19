@@ -14,7 +14,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "vehicle")
 public class VehicleEntity {
@@ -39,53 +49,5 @@ public class VehicleEntity {
 	
 	@OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AccessoryEntity> accessories;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getBrand() {
-		return brand;
-	}
-
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public String getManufacturingYear() {
-		return manufacturingYear;
-	}
-
-	public void setManufacturingYear(String manufacturingYear) {
-		this.manufacturingYear = manufacturingYear;
-	}
-
-	public String getFuelType() {
-		return fuelType;
-	}
-
-	public void setFuelType(String fuelType) {
-		this.fuelType = fuelType;
-	}
-
-	public GarageEntity getGarage() {
-		return garage;
-	}
-
-	public void setGarage(GarageEntity garage) {
-		this.garage = garage;
-	}
-	
-	public List<AccessoryEntity> getAccessories() {
-		return accessories;
-	}
-	
-	public void setAccessories(List<AccessoryEntity> accessories) {
-		this.accessories = accessories;
-	}
 
 }

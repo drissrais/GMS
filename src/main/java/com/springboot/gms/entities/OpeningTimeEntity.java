@@ -12,7 +12,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "opening_time")
 public class OpeningTimeEntity {
@@ -31,30 +41,5 @@ public class OpeningTimeEntity {
 	@JoinColumn(name = "daily_opening_time_id")
 	@JsonIgnore
 	private DailyOpeningTimeEntity dailyOpeningTime;
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public LocalTime getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(LocalTime startTime) {
-		this.startTime = startTime;
-	}
-	public LocalTime getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(LocalTime endTime) {
-		this.endTime = endTime;
-	}
-	public DailyOpeningTimeEntity getDailyOpeningTime() {
-		return dailyOpeningTime;
-	}
-	public void setDailyOpeningTime(DailyOpeningTimeEntity dailyOpeningTime) {
-		this.dailyOpeningTime = dailyOpeningTime;
-	}
 
 }

@@ -16,17 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.gms.entities.VehicleEntity;
 import com.springboot.gms.service.VehicleService;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @RestController
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
 	private VehicleService vehicleService;
-
-	public VehicleController(VehicleService vehicleService) {
-		super();
-		this.vehicleService = vehicleService;
-	}
-
 	@PostMapping("/addVehicleToGarage/{garageId}")
 	public ResponseEntity<VehicleEntity> addVehicleToGarage(@PathVariable Long garageId, @RequestBody VehicleEntity vehicle) {
 		VehicleEntity savedVehicle = vehicleService.addVehicleToGarage(garageId, vehicle);

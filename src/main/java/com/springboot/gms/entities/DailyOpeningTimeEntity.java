@@ -17,7 +17,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "daily_opening_time")
 public class DailyOpeningTimeEntity {
@@ -37,37 +47,5 @@ public class DailyOpeningTimeEntity {
     @JoinColumn(name = "garage_id")
     @JsonIgnore
     private GarageEntity garage;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public DayOfWeek getDayOfWeek() {
-		return dayOfWeek;
-	}
-
-	public void setDayOfWeek(DayOfWeek dayOfWeek) {
-		this.dayOfWeek = dayOfWeek;
-	}
-
-	public List<OpeningTimeEntity> getOpeningTimes() {
-		return openingTimes;
-	}
-
-	public void setOpeningTimes(List<OpeningTimeEntity> openingTimes) {
-		this.openingTimes = openingTimes;
-	}
-	
-	public GarageEntity getGarage() {
-		return garage;
-	}
-	
-	public void setGarage(GarageEntity garage) {
-		this.garage = garage;
-	}
 
 }

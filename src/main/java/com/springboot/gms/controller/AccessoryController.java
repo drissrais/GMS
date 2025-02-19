@@ -16,16 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.gms.entities.AccessoryEntity;
 import com.springboot.gms.service.AccessoryService;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @RestController
 @RequestMapping("/api/accessories")
 public class AccessoryController {
 
 	private AccessoryService accessoryService;
-
-	public AccessoryController(AccessoryService accessoryService) {
-		super();
-		this.accessoryService = accessoryService;
-	}
 
 	@PostMapping("/addAccessoryToVehicle/{vehicleId}")
 	public ResponseEntity<AccessoryEntity> addAccessoryToVehicle(@RequestBody AccessoryEntity accessory,

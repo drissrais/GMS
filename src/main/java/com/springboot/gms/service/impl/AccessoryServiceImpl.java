@@ -15,17 +15,22 @@ import com.springboot.gms.repository.AccessoryRepository;
 import com.springboot.gms.repository.VehicleRepository;
 import com.springboot.gms.service.AccessoryService;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Service
 public class AccessoryServiceImpl implements AccessoryService {
 
 	private AccessoryRepository accessoryRepository;
 	private VehicleRepository vehicleRepository;
-
-	public AccessoryServiceImpl(AccessoryRepository accessoryRepository, VehicleRepository vehicleRepository) {
-		super();
-		this.accessoryRepository = accessoryRepository;
-		this.vehicleRepository = vehicleRepository;
-	}
 
 	@Override
 	public AccessoryEntity addAccessoryToVehicle(AccessoryEntity accessory, Long vehicleId) {

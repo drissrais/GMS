@@ -15,17 +15,22 @@ import com.springboot.gms.repository.GarageRepository;
 import com.springboot.gms.repository.VehicleRepository;
 import com.springboot.gms.service.VehicleService;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
 	private VehicleRepository vehicleRepository;
 	private GarageRepository garageRepository;
-
-	public VehicleServiceImpl(VehicleRepository vehicleRepository, GarageRepository garageRepository) {
-		super();
-		this.vehicleRepository = vehicleRepository;
-		this.garageRepository = garageRepository;
-	}
 
 	@Override
 	public VehicleEntity addVehicleToGarage(Long garageId, VehicleEntity vehicle) {

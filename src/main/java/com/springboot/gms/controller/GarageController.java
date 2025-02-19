@@ -18,16 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.gms.entities.GarageEntity;
 import com.springboot.gms.service.GarageService;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @RestController
 @RequestMapping("/api/garages")
 public class GarageController {
 
 	private GarageService garageService;
-
-	public GarageController(GarageService garageService) {
-		super();
-		this.garageService = garageService;
-	}
 
 	@PostMapping("/saveGarage")
 	public ResponseEntity<GarageEntity> saveGarage(@RequestBody GarageEntity garage) {

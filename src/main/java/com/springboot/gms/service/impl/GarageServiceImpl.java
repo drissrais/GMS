@@ -18,15 +18,21 @@ import com.springboot.gms.repository.GarageRepository;
 import com.springboot.gms.service.GarageService;
 import com.springboot.gms.utils.GarageSpecification;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Service
 public class GarageServiceImpl implements GarageService {
 
 	private GarageRepository garageRepository;
-
-	public GarageServiceImpl(GarageRepository garageRepository) {
-		super();
-		this.garageRepository = garageRepository;
-	}
 
 	@Override
 	public GarageEntity saveGarage(GarageEntity garage) {
