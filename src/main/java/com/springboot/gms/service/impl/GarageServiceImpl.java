@@ -18,28 +18,22 @@ import com.springboot.gms.repository.GarageRepository;
 import com.springboot.gms.service.GarageService;
 import com.springboot.gms.utils.GarageSpecification;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Service
 public class GarageServiceImpl implements GarageService {
 
 	private GarageRepository garageRepository;
+
+	public GarageServiceImpl(GarageRepository garageRepository) {
+		super();
+		this.garageRepository = garageRepository;
+	}
 
 	@Override
 	public GarageEntity saveGarage(GarageEntity garage) {
 		if (Objects.nonNull(garage.getDailyOpeningTimeList())) {
 			for (DailyOpeningTimeEntity dailyOpeningTime : garage.getDailyOpeningTimeList()) {
 				dailyOpeningTime.setGarage(garage);
-				if (dailyOpeningTime.getOpeningTimes() != null) {
+				if (Objects.nonNull(dailyOpeningTime.getOpeningTimes())) {
 					for (OpeningTimeEntity openingTime : dailyOpeningTime.getOpeningTimes()) {
 						openingTime.setDailyOpeningTime(dailyOpeningTime);
 					}
@@ -73,7 +67,7 @@ public class GarageServiceImpl implements GarageService {
 			existingGarage.getDailyOpeningTimeList().clear();
 			for (DailyOpeningTimeEntity dailyOpeningTime : garage.getDailyOpeningTimeList()) {
 				dailyOpeningTime.setGarage(existingGarage);
-				if (dailyOpeningTime.getOpeningTimes() != null) {
+				if (Objects.nonNull(dailyOpeningTime.getOpeningTimes())) {
 					for (OpeningTimeEntity openingTime : dailyOpeningTime.getOpeningTimes()) {
 						openingTime.setDailyOpeningTime(dailyOpeningTime);
 					}

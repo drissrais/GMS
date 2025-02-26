@@ -16,32 +16,28 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.gms.entities.AccessoryEntity;
 import com.springboot.gms.service.AccessoryService;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.Valid;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @RestController
 @RequestMapping("/api/accessories")
 public class AccessoryController {
 
 	private AccessoryService accessoryService;
 
+	public AccessoryController(AccessoryService accessoryService) {
+		super();
+		this.accessoryService = accessoryService;
+	}
+
 	@PostMapping("/addAccessoryToVehicle/{vehicleId}")
-	public ResponseEntity<AccessoryEntity> addAccessoryToVehicle(@RequestBody AccessoryEntity accessory,
+	public ResponseEntity<AccessoryEntity> addAccessoryToVehicle(@Valid @RequestBody AccessoryEntity accessory,
 			@PathVariable Long vehicleId) {
 		AccessoryEntity savedAccessory = accessoryService.addAccessoryToVehicle(accessory, vehicleId);
 		return new ResponseEntity<AccessoryEntity>(savedAccessory, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/updateAccessory/{id}")
-	public ResponseEntity<AccessoryEntity> updateAccessory(@RequestBody AccessoryEntity accessory, @PathVariable Long id) {
+	public ResponseEntity<AccessoryEntity> updateAccessory(@Valid @RequestBody AccessoryEntity accessory, @PathVariable Long id) {
 		AccessoryEntity updatedAccessory = accessoryService.updateAccessory(accessory, id);
 		return new ResponseEntity<AccessoryEntity>(updatedAccessory, HttpStatus.OK);
 	}
@@ -57,5 +53,5 @@ public class AccessoryController {
 			@RequestParam int sizeOfPage) {
 		return accessoryService.getAccessoriesByVehicle(vehicleId, pageIndex, sizeOfPage);
 	}
-
+	
 }

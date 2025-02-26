@@ -15,12 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.springboot.gms.entities.AccessoryEntity;
-import com.springboot.gms.entities.GarageEntity;
-import com.springboot.gms.entities.VehicleEntity;
-import com.springboot.gms.repository.AccessoryRepository;
-import com.springboot.gms.repository.GarageRepository;
-import com.springboot.gms.repository.VehicleRepository;
+import com.springboot.gms.exception.ResourceNotFoundException;
 
 import jakarta.transaction.Transactional;
 
@@ -28,196 +23,171 @@ import jakarta.transaction.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 public class AccessoryIntegrationTest {
-	
+
 	@Autowired
 	private MockMvc mockMvc;
-	
-	@Autowired
-	private AccessoryRepository accessoryRepository;
-	
-	@Autowired
-	private VehicleRepository vehicleRepository;
-	
-	@Autowired
-	private GarageRepository garageRepository;
-	
+
 	@Test
 	void addAccessoryToVehicle_ShouldReturnCreatedAccessory() throws Exception {
 		// Arrange
-		GarageEntity garage = new GarageEntity();
-		garage.setName("Garage AutoTech");
-		garage = garageRepository.save(garage);
-		
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setBrand("Talisman");
-		vehicle.setGarage(garage);
-		vehicleRepository.save(vehicle);
-		
+		Long vehicleId = 1L;
+
 		String accessoryJson = """
-			{
-				"name": "Sunroof Cover",
-				"description": "Protects sunroof from dust",
-				"price": 50.0,
-				"type": "Exterior"
-			}
-		""";
-		
+					{
+						"name": "Sunroof Cover",
+						"description": "Protects sunroof from dust",
+						"price": 50.0,
+						"type": "Exterior"
+					}
+				""";
+
 		// Act & Assert
-		mockMvc.perform(post("/api/accessory/add/{vehicleId}", vehicle.getId())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(accessoryJson))
-			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.name").value("Sunroof Cover"));
+		mockMvc.perform(post("/api/accessories/addAccessoryToVehicle/{vehicleId}", vehicleId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.name").value("Sunroof Cover"));
 	}
-	
+
 	@Test
 	void addAccessoryToNonExistantVehicle_ShouldReturnVehicleDoesNotExist() throws Exception {
 		// Arrange
 		Long nonExistantVehicleId = 999L;
-		
+
+		ResourceNotFoundException exc = new ResourceNotFoundException("Vehicle", "ID", nonExistantVehicleId);
+
 		String accessoryJson = """
-			{
-				"name": "Sunroof Cover",
-				"description": "Protects sunroof from dust",
-				"price": 50.0,
-				"type": "Exterior"
-			}
-		""";
-		
-		mockMvc.perform(post("/api/accessory/add/{vehicleId}", nonExistantVehicleId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(accessoryJson))
-			.andExpect(status().isNotFound());
+					{
+						"name": "Sunroof Cover",
+						"description": "Protects sunroof from dust",
+						"price": 50.0,
+						"type": "Exterior"
+					}
+				""";
+
+		mockMvc.perform(post("/api/accessories/addAccessoryToVehicle/{vehicleId}", nonExistantVehicleId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isNotFound())
+				.andExpect(content().string(exc.getMessage()));
 	}
 	
 	@Test
+	void addAccessoryToVehicle_invalidInput() throws Exception {
+		// Arrange
+		Long vehicleId = 1L;
+
+		String accessoryJson = """
+					{
+						"description": "Protects sunroof from dust",
+						"price": 50.0,
+						"type": "Exterior"
+					}
+				""";
+
+		mockMvc.perform(post("/api/accessories/addAccessoryToVehicle/{vehicleId}", vehicleId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isBadRequest())
+				.andExpect(content().string("Name must not be null"));
+	}
+
+	@Test
 	void updateAccessory_ShouldReturnUpdatedAccessory() throws Exception {
 		// Arrange
-		GarageEntity garage = new GarageEntity();
-		garage.setName("Garage AutoTech");
-		garage = garageRepository.save(garage);
-		
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setBrand("Talisman");
-		vehicle.setGarage(garage);
-		vehicle = vehicleRepository.save(vehicle);
-		
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setName("Sunroof Cover");
-		accessory.setDescription("Protects sunroof from dust");
-		accessory.setPrice(50.0);
-		accessory.setType("Exterior");
-		accessory.setVehicle(vehicle);
-		accessory = accessoryRepository.save(accessory);
-		
+		Long accessoryId = 1L;
+
 		String accessoryJson = """
-			{
-				"name": "Sunroof Cover",
-				"description": "Protects sunroof from dust",
-				"price": 60.0,
-				"type": "Exterior"
-			}	
-		""";
-		
+					{
+						"name": "Sunroof Cover",
+						"description": "Protects sunroof from dust",
+						"price": 60.0,
+						"type": "Exterior"
+					}
+				""";
+
 		// Act & Assert
-		mockMvc.perform(put("/api/accessory/update/{accessoryId}", accessory.getId())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(accessoryJson))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.price").value(60.0));
+		mockMvc.perform(put("/api/accessories/updateAccessory/{accessoryId}", accessoryId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isOk())
+				.andExpect(jsonPath("$.price").value(60.0));
 	}
-	
+
 	@Test
 	void updateAccessory_ShouldReturnAccessoryDoesNotExist() throws Exception {
 		// Arrange
 		Long nonExistantAccessoryId = 999L;
-		
+
+		ResourceNotFoundException exc = new ResourceNotFoundException("Accessory", "ID", nonExistantAccessoryId);
+
 		String accessoryJson = """
-			{
-				"name": "Sunroof Cover",
-				"description": "Protects sunroof from dust",
-				"price": 60.0,
-				"type": "Exterior"
-			}	
-		""";
-		
+					{
+						"name": "Sunroof Cover",
+						"description": "Protects sunroof from dust",
+						"price": 60.0,
+						"type": "Exterior"
+					}
+				""";
+
 		// Act & Assert
-		mockMvc.perform(put("/api/accessory/update/{accessoryId}", nonExistantAccessoryId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(accessoryJson))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(put("/api/accessories/updateAccessory/{accessoryId}", nonExistantAccessoryId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isNotFound())
+				.andExpect(content().string(exc.getMessage()));
 	}
 	
 	@Test
+	void updateAccessory_invalidInput() throws Exception {
+		// Arrange
+		Long accessoryId = 1L;
+
+		String accessoryJson = """
+					{
+						"description": "Protects sunroof from dust",
+						"price": 50.0,
+						"type": "Exterior"
+					}
+				""";
+
+		mockMvc.perform(put("/api/accessories/updateAccessory/{accessoryId}", accessoryId)
+				.contentType(MediaType.APPLICATION_JSON).content(accessoryJson)).andExpect(status().isBadRequest())
+				.andExpect(content().string("Name must not be null"));
+	}
+
+	@Test
 	void deleteAccessory_ShouldDelete() throws Exception {
 		// Arrange
-		GarageEntity garage = new GarageEntity();
-		garage.setName("Garage AutoTech");
-		garage = garageRepository.save(garage);
-		
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setBrand("Talisman");
-		vehicle.setGarage(garage);
-		vehicle = vehicleRepository.save(vehicle);
-		
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setName("Sunroof Cover");
-		accessory.setDescription("Protects sunroof from dust");
-		accessory.setPrice(50.0);
-		accessory.setType("Exterior");
-		accessory.setVehicle(vehicle);
-		accessory = accessoryRepository.save(accessory);
-		
+		Long accessoryId = 1L;
+
 		// Act & Assert
-		mockMvc.perform(delete("/api/accessory/delete/{accessoryId}", accessory.getId()))
-			.andExpect(status().isOk())
-			.andExpect(content().string("Accessory deleted successfully."));
+		mockMvc.perform(delete("/api/accessories/deleteAccessory/{accessoryId}", accessoryId))
+				.andExpect(status().isNoContent()).andExpect(content().string("Accessory deleted successfully."));
 	}
-	
+
 	@Test
 	void deleteAccessory_ShouldReturnAccessoryDoesNotExist() throws Exception {
 		// Arrange
 		Long nonExistantAccessoryId = 999L;
-		
+
+		ResourceNotFoundException exc = new ResourceNotFoundException("Accessory", "ID", nonExistantAccessoryId);
+
 		// Act & Assert
-		mockMvc.perform(delete("/api/accessory/delete/{accessoryId}", nonExistantAccessoryId))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(delete("/api/accessories/deleteAccessory/{accessoryId}", nonExistantAccessoryId))
+				.andExpect(status().isNotFound()).andExpect(content().string(exc.getMessage()));
 	}
-	
+
 	@Test
 	void getAccessoriesByVehicle_ShouldReturnPageOfAccessories() throws Exception {
 		// Arrange
-		GarageEntity garage = new GarageEntity();
-		garage.setName("Garage AutoTech");
-		garage = garageRepository.save(garage);
-		
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setBrand("Talisman");
-		vehicle.setGarage(garage);
-		vehicle = vehicleRepository.save(vehicle);
-		
-		AccessoryEntity accessory1 = new AccessoryEntity();
-		accessory1.setName("Sunroof Cover");
-		accessory1.setDescription("Protects sunroof from dust");
-		accessory1.setPrice(50.0);
-		accessory1.setType("Exterior");
-		accessory1.setVehicle(vehicle);
-		accessoryRepository.save(accessory1);
-		
+		Long vehicleId = 1L;
+
 		// Act & Assert
-		mockMvc.perform(get("/api/accessory/getAccessoriesByVehicle/{vehicleId}?pageIndex=0&sizeOfPage=5", vehicle.getId()))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.content[0].name").value("Sunroof Cover"));
+		mockMvc.perform(get("/api/accessories/getAccessoriesByVehicle/{vehicleId}?pageIndex=0&sizeOfPage=5", vehicleId))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.content[0].name").value("Bluetooth Stereo System"));
 	}
-	
+
 	@Test
 	void getAccessoriesByVehicle_ShouldReturnVehicleDoesNotExist() throws Exception {
 		// Arrange
 		Long nonExistantVehicleId = 999L;
-		
+
+		ResourceNotFoundException exc = new ResourceNotFoundException("Vehicle", "ID", nonExistantVehicleId);
+
 		// Act & Assert
-		mockMvc.perform(get("/api/accessory/getAccessoriesByVehicle/{vehicleId}?pageIndex=0&sizeOfPage=5", nonExistantVehicleId))
-			.andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/accessories/getAccessoriesByVehicle/{vehicleId}?pageIndex=0&sizeOfPage=5",
+				nonExistantVehicleId)).andExpect(status().isNotFound()).andExpect(content().string(exc.getMessage()));
 	}
 
 }

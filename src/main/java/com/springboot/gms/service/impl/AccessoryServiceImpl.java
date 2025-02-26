@@ -1,7 +1,5 @@
 package com.springboot.gms.service.impl;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,22 +13,17 @@ import com.springboot.gms.repository.AccessoryRepository;
 import com.springboot.gms.repository.VehicleRepository;
 import com.springboot.gms.service.AccessoryService;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Service
 public class AccessoryServiceImpl implements AccessoryService {
 
 	private AccessoryRepository accessoryRepository;
 	private VehicleRepository vehicleRepository;
+
+	public AccessoryServiceImpl(AccessoryRepository accessoryRepository, VehicleRepository vehicleRepository) {
+		super();
+		this.accessoryRepository = accessoryRepository;
+		this.vehicleRepository = vehicleRepository;
+	}
 
 	@Override
 	public AccessoryEntity addAccessoryToVehicle(AccessoryEntity accessory, Long vehicleId) {
@@ -48,13 +41,6 @@ public class AccessoryServiceImpl implements AccessoryService {
 		existingAccessory.setDescription(accessory.getDescription());
 		existingAccessory.setPrice(accessory.getPrice());
 		existingAccessory.setType(accessory.getType());
-
-		if (Objects.nonNull(accessory.getVehicle()) && Objects.nonNull(accessory.getVehicle().getId())) {
-			VehicleEntity existingVehicle = vehicleRepository.findById(accessory.getVehicle().getId())
-					.orElseThrow(() -> new ResourceNotFoundException("Vehicle", "ID", accessory.getVehicle().getId()));
-			accessory.setVehicle(existingVehicle);
-		}
-
 		return accessoryRepository.save(existingAccessory);
 	}
 

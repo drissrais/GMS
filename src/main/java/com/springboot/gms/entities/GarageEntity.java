@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,10 +41,10 @@ public class GarageEntity {
 
 	private String email;
 
-	@OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<DailyOpeningTimeEntity> dailyOpeningTimeList;
 	
-	@OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "garage", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<VehicleEntity> vehicles;
 
 }

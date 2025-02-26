@@ -47,13 +47,9 @@ public class AccessoryServiceImplTest {
 	void addAccessoryToVehicle_ShouldReturnAccessory() {
 		// Arrange
 		Long vehicleId = 1L;
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setId(vehicleId);
+		VehicleEntity vehicle = VehicleEntity.builder().id(vehicleId).build();
 
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setId(1L);
-		accessory.setName("GPS Tracker");
-		accessory.setVehicle(vehicle);
+		AccessoryEntity accessory = AccessoryEntity.builder().id(1L).name("GPS Tracker").build();
 
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.of(vehicle));
 		Mockito.when(accessoryRepository.save(Mockito.any(AccessoryEntity.class))).thenReturn(accessory);
@@ -77,9 +73,7 @@ public class AccessoryServiceImplTest {
 		Long vehicleId = 99L;
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.empty());
 
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setId(1L);
-		accessory.setName("GPS Tracker");
+		AccessoryEntity accessory = AccessoryEntity.builder().id(1L).name("GPS Tracker").build();
 
 		// Act & Assert
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -94,21 +88,10 @@ public class AccessoryServiceImplTest {
 	@Test
 	void updateAccessory_ShouldReturnAccessory() {
 		// Arrange
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setId(1L);
-
 		Long accessoryId = 1L;
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setId(accessoryId);
-		accessory.setName("Car Cover");
-		accessory.setDescription("Waterproof and dustproof car cover for sedans.");
-		accessory.setPrice(49.99);
-		accessory.setType("Protection");
-		accessory.setVehicle(vehicle);
+		AccessoryEntity accessory = AccessoryEntity.builder().id(accessoryId).name("Car Cover").build();
 
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.of(accessory));
-		Mockito.when(vehicleRepository.findById(Mockito.eq(accessory.getVehicle().getId())))
-				.thenReturn(Optional.of(vehicle));
 		Mockito.when(accessoryRepository.save(Mockito.any(AccessoryEntity.class))).thenReturn(accessory);
 
 		// Act
@@ -117,11 +100,9 @@ public class AccessoryServiceImplTest {
 		// Assert
 		assertNotNull(result);
 		assertEquals("Car Cover", result.getName());
-		assertEquals(vehicle.getId(), result.getVehicle().getId());
 
 		// Verify method calls
 		verify(accessoryRepository, times(1)).findById(accessoryId);
-		verify(vehicleRepository, times(1)).findById(accessory.getVehicle().getId());
 		verify(accessoryRepository, times(1)).save(Mockito.any(AccessoryEntity.class));
 	}
 
@@ -129,12 +110,9 @@ public class AccessoryServiceImplTest {
 	void updateAccessory_ShouldThrowException_WhenAccessoryNotFound() {
 		// Arrange
 		Long accessoryId = 99L;
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setId(accessoryId);
+		AccessoryEntity accessory = AccessoryEntity.builder().id(accessoryId).build();
+		
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.empty());
-
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setId(1L);
 
 		// Act & Assert
 		assertThrows(ResourceNotFoundException.class, () -> {
@@ -143,7 +121,6 @@ public class AccessoryServiceImplTest {
 
 		// Verify method calls
 		verify(accessoryRepository, times(1)).findById(accessoryId);
-		verify(vehicleRepository, never()).findById(vehicle.getId());
 		verify(accessoryRepository, never()).save(any(AccessoryEntity.class));
 	}
 
@@ -151,10 +128,10 @@ public class AccessoryServiceImplTest {
 	void deleteAccessory_ShouldDelete_WhenAccessoryExists() {
 		// Arrange
 		Long accessoryId = 1L;
-		AccessoryEntity accessory = new AccessoryEntity();
-		accessory.setId(accessoryId);
+		AccessoryEntity accessory = AccessoryEntity.builder().id(accessoryId).build();
 
 		Mockito.when(accessoryRepository.findById(Mockito.eq(accessoryId))).thenReturn(Optional.of(accessory));
+		Mockito.doNothing().when(accessoryRepository).deleteById(Mockito.eq(accessoryId));
 
 		// Act
 		accessoryService.deleteAccessory(accessoryId);
@@ -184,24 +161,16 @@ public class AccessoryServiceImplTest {
 	void getAccessoriesByVehicle_ShouldReturnPageOfAccessories() {
 		// Arrange
 		Long vehicleId = 1L;
-		VehicleEntity vehicle = new VehicleEntity();
-		vehicle.setId(vehicleId);
+		VehicleEntity vehicle = VehicleEntity.builder().id(1L).build();
 
-		AccessoryEntity accessory1 = new AccessoryEntity();
-		accessory1.setId(1L);
-		accessory1.setName("GPS Tracker");
-		accessory1.setVehicle(vehicle);
-
-		AccessoryEntity accessory2 = new AccessoryEntity();
-		accessory2.setId(2L);
-		accessory2.setName("Car Cover");
-		accessory2.setVehicle(vehicle);
+		AccessoryEntity accessory1 = AccessoryEntity.builder().id(1L).name("Car Cover").vehicle(vehicle).build();
+		AccessoryEntity accessory2 = AccessoryEntity.builder().id(2L).name("GPS Tracker").vehicle(vehicle).build();
 
 		Page<AccessoryEntity> accessoryPage = new PageImpl<>(List.of(accessory1, accessory2));
 		Pageable sortedByNameAsc = PageRequest.of(0, 5, Sort.by("name").ascending());
 
 		Mockito.when(vehicleRepository.findById(Mockito.eq(vehicleId))).thenReturn(Optional.of(vehicle));
-		Mockito.when(accessoryRepository.findByVehicleId(Mockito.eq(vehicleId), sortedByNameAsc))
+		Mockito.when(accessoryRepository.findByVehicleId(Mockito.eq(vehicleId), Mockito.eq(sortedByNameAsc)))
 				.thenReturn(accessoryPage);
 
 		// Act
@@ -210,7 +179,7 @@ public class AccessoryServiceImplTest {
 		// Assert
 		assertNotNull(result);
 		assertEquals(2, result.getContent().size());
-		assertEquals("GPS Tracker", result.getContent().get(0).getName());
+		assertEquals("Car Cover", result.getContent().get(0).getName());
 
 		verify(vehicleRepository, times(1)).findById(vehicleId);
 		verify(accessoryRepository, times(1)).findByVehicleId(vehicleId, sortedByNameAsc);
